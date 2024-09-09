@@ -33,7 +33,7 @@ jobs:
                             rm "$1"
                         fi
                     ' _ {} \;
-            - name: 刪除多餘過渡檔案
+            - name: 刪除多餘過渡檔案 #heif-convert 有時候會產生一些黑白的輔助圖片，這裡不希望被加進圖庫
               run: find . -type f \( \( -name "*aux*" -a -name "*apple*" \) -o -name "*depth*" \) -delete
             - name: JPG 轉檔成 WebP
               run: |
