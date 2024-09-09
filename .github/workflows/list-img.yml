@@ -23,7 +23,19 @@ jobs:
                   sudo apt-get install -y ffmpeg
             - name: 列出 HEIC 文件
               run: find img -type f -name '*.HEIC'
-            - name: 轉檔成 WebP
+            - name: HEIC to JPG
+              run: |
+                    find img -type f -name '*.HEIC' -exec sh -c '
+                        output_file="${1%.*}.jpg"
+                        heif-convert "$1" "$output_file"
+                        # 確保轉換成功後刪除原始 HEIC 文件
+                        if [ -f "$output_file" ]; then
+                            rm "$1"
+                        fi
+                    ' _ {} \;
+            - name: 刪除多餘過渡檔案
+              run: find . -type f \( -name "*aux*" -a -name "*apple*" \) -delete
+            - name: JPG 轉檔成 WebP
               run: |
                   find img -type d -exec mkdir -p converted/{} \;
                   find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.HEIC' \) -exec sh -c '
@@ -32,8 +44,6 @@ jobs:
                     ffmpeg -i "$1" -q 50 "$converted_file"
                   ' _ {} \;
                   find converted -type f -name '*.webp' -exec sh -c 'convert "$1" -resize x1000 "$1"' _ {} \;
-            - name: 刪除多餘過渡檔案
-              run: find . -type f \( -name "*aux*" -a -name "*apple*" \) -delete
             - name: 列出圖片
               run: node ./list-img.js
 
