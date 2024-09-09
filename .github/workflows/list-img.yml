@@ -21,31 +21,20 @@ jobs:
               run: |
                   sudo apt-get update
                   sudo apt-get install -y webp libheif-examples imagemagick
-
+                  sudo apt-get install -y ffmpeg
             - name: 列出 HEIC 文件
               run: find img -type f -name '*.HEIC'
-
             - name: 轉檔成 WebP
               run: |
                   find img -type d -exec mkdir -p converted/{} \;
-                  find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' \) -exec sh -c '
+                  find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.HEIC' \) -exec sh -c '
                     file="$1"
                     base_name=$(basename "$file")
                     converted_file="converted/${base_name%.*}.webp"
-                    cwebp -q 50 "$file" -o "$converted_file"
+                    ffmpeg -q 50 -i "$file" "$converted_file"
                   ' _ {} \;
                   find converted -type f -name '*.webp' -exec sh -c 'convert "$1" -resize x1000 "$1"' _ {} \;
 
-            - name: 轉檔成 JPG (處理 HEIC)
-              run: |
-                  find img -type f -name '*.HEIC' -exec sh -c '
-                    file="$1"
-                    base_name=$(basename "$file")
-                    converted_file="converted/${base_name%.*}.jpg"
-                    # 替換掉檔名中的冒號
-                    converted_file=$(echo "$converted_file" | sed "s/:/_/g")
-                    heif-convert "$file" "$converted_file"
-                  ' _ {} \;
             - name: 列出圖片
               run: node ./list-img.js
 
