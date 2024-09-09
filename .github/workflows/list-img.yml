@@ -28,9 +28,7 @@ jobs:
               run: |
                   find img -type d -exec mkdir -p converted/{} \;
                   find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.HEIC' \) -exec sh -c '
-                    file="$1"
-                    base_name=$(basename "$file")
-                    converted_file="converted/${base_name%.*}.webp"
+                    converted_file="converted/${1%.*}.webp"
                     ffmpeg -i "$file" -q 50 "$converted_file"
                   ' _ {} \;
                   find converted -type f -name '*.webp' -exec sh -c 'convert "$1" -resize x1000 "$1"' _ {} \;
