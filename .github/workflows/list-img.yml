@@ -38,10 +38,10 @@ jobs:
             - name: JPG 轉檔成 WebP
               run: |
                   find img -type d -exec mkdir -p converted/{} \;
-                  find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.JPEG'\) -exec sh -c '
-                    converted_file="converted/${1%.*}.webp"
-                    echo "@!#$converted_file"
-                    ffmpeg -i "$1" -q 50 "$converted_file"
+                  find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.JPEG' \) -exec sh -c '
+                  converted_file="converted/${1%.*}.webp"
+                  echo "@!#$converted_file"
+                  ffmpeg -i "$1" -q 50 "$converted_file"
                   ' _ {} \;
                   find converted -type f -name '*.webp' -exec sh -c 'convert "$1" -resize x1000 "$1"' _ {} \;
             - name: 列出圖片
