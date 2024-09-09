@@ -34,11 +34,11 @@ jobs:
                         fi
                     ' _ {} \;
             - name: 刪除多餘過渡檔案
-              run: find . -type f \( -name "*aux*" -a -name "*apple*" \) -delete
+              run: find . -type f \( -name "*aux*" -a -name "*apple*" -o -name "*depth*"\) -delete
             - name: JPG 轉檔成 WebP
               run: |
                   find img -type d -exec mkdir -p converted/{} \;
-                  find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.HEIC' \) -exec sh -c '
+                  find img -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.JPG' -o -name '*.jpeg' -o -name '*.JPEG'\) -exec sh -c '
                     converted_file="converted/${1%.*}.webp"
                     echo "@!#$converted_file"
                     ffmpeg -i "$1" -q 50 "$converted_file"
