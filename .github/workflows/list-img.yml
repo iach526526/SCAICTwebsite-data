@@ -32,7 +32,8 @@ jobs:
                     ffmpeg -i "$1" -q 50 "$converted_file"
                   ' _ {} \;
                   find converted -type f -name '*.webp' -exec sh -c 'convert "$1" -resize x1000 "$1"' _ {} \;
-
+            - name: 刪除多餘過渡檔案
+              run: find . -type f \( -name "*aux*" -a -name "*apple*" \) -delete
             - name: 列出圖片
               run: node ./list-img.js
 
