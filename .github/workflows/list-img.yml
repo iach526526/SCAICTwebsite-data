@@ -31,7 +31,7 @@ jobs:
                     file="$1"
                     base_name=$(basename "$file")
                     converted_file="converted/${base_name%.*}.webp"
-                    ffmpeg -q 50 -i "$file" "$converted_file"
+                    ffmpeg -i "$file" -q 50 "$converted_file"
                   ' _ {} \;
                   find converted -type f -name '*.webp' -exec sh -c 'convert "$1" -resize x1000 "$1"' _ {} \;
 
